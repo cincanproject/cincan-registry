@@ -431,7 +431,9 @@ def create_list_argparse(subparsers: argparse._SubParsersAction, ):
     )
 
 
-def list_handler(args, loglevel: str):
+def list_handler(args):
+    loglevel = args.log_level if args.log_level else ("WARNING" if args.quiet else "INFO")
+
     if (args.list_sub_command or args.sub_command == "versions") and (
             args.all or args.tag != DEFAULT_IMAGE_FILTER_TAG or args.size
     ):
@@ -579,7 +581,7 @@ def main():
         sys.exit(1)
 
     elif sub_command == "list":
-        list_handler(args, log_level)
+        list_handler(args)
 
     elif sub_command == "utils":
         utils_handler(args)
