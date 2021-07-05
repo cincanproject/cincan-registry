@@ -2,6 +2,14 @@
 
 All notable changes in project will be documented in here.
 
+## [0.3.0]
+
+### Changed
+
+  * Major change - use SQLite3 database instead of cache files for all storage
+  * Version history is tracked now
+  * Performance improvements
+
 ## [0.2.0]
 
 ### Added

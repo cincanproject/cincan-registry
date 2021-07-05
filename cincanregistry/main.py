@@ -439,7 +439,7 @@ def list_handler(args, loglevel: str):
             "No effect with size or tag related arguments when used with 'versions' subcommand"
         )
     # Change logging format in silent mode, needs reloading on < 3.8. Python 3.8 would have 'force' parameter
-    if args.silent:
+    if hasattr(args, "silent") and args.silent:
         reload(logging)
         date_strftime_format = "%Y-%m-%d %H:%M:%S"
         logging.basicConfig(
@@ -452,7 +452,7 @@ def list_handler(args, loglevel: str):
         args.tools = ""
     if not hasattr(args, "registry"):
         args.registry = None
-    reg = ToolRegistry(args.config, args.tools, default_remote=args.registry, silent=args.silent)
+    reg = ToolRegistry(args.config, args.tools, default_remote=args.registry, silent=args.silent if hasattr(args, "silent") else False)
 
     if not args.list_sub_command:
 
