@@ -65,7 +65,9 @@ class DaemonRegistry(RegistryBase):
         """Find local images by name, return ToolInfo object with version list"""
         if not self._is_docker_running():
             return None
-        images = self.client.images.list(name, filters={"dangling": False})
+        # We must match full image name to apply filter correctly
+        # the wildcard character does not apply to / in repository name
+        images = self.client.images.list(f"*/*/{name}", filters={"dangling": False})
         if not images:
             return None
         name, tag = split_tool_tag(name)
