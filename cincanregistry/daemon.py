@@ -69,6 +69,8 @@ class DaemonRegistry(RegistryBase):
         # the wildcard character does not apply to / in repository name
         images = self.client.images.list(f"*/*/{name}", filters={"dangling": False})
         if not images:
+            images = self.client.images.list(f"*/{name}", filters={"dangling": False})
+        if not images:
             return None
         name, tag = split_tool_tag(name)
         tool = ToolInfo(name, datetime.now(), self.registry_name)
