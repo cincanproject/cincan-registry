@@ -125,6 +125,10 @@ class ToolInfo:
             to_include = [i for i in self.versions if i.version_type == VersionType.REMOTE and LATEST_TAG in i.tags]
             if to_include:
                 return self._latest_by_time(to_include)
+            # No latest tag - select any tag by time #TODO might not be correct if image is updated afterwards
+            to_include = [i for i in self.versions if i.version_type == VersionType.REMOTE]
+            if to_include:
+                return self._latest_by_time(to_include)
             else:
                 return VersionInfo("undefined", VersionType.UNDEFINED, "", set(), datetime.min)
 

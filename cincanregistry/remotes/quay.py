@@ -109,7 +109,16 @@ class QuayRegistry(RemoteRegistry):
             description = t.get("description")
             tool_list[name] = ToolInfo(name, datetime.datetime.fromtimestamp(timestamp),
                                        self.registry_name, description=description)
-        return await self.update_tools_in_parallel(tool_list, self.fetch_tags, force_update)
+        tools = await self.update_tools_in_parallel(tool_list, self.fetch_tags, force_update)
+        if defined_tag:
+            keep = []
+            for t in tools.keys():
+                for v in tools[t].versions:
+                    if defined_tag in v.tags:
+                        keep.append(t)
+                        break
+            tools = {k: tools[k] for k in keep}
+        return tools
 
     def fetch_tags(self, tool: ToolInfo, update_cache: bool = False):
         """
