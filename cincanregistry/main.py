@@ -492,6 +492,8 @@ def list_handler(args):
                     tools, location, prefix=reg.remote_registry.full_prefix,
                     filter_by=(args.tag if not args.all else ""), show_size=args.size
                 )
+            else:
+                print("No single tool available for given arguments.")
 
         else:
             tool_list = reg.get_tools(defined_tag=args.tag if not args.all else "")
