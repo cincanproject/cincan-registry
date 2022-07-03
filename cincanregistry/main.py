@@ -215,7 +215,7 @@ def print_version_check(
 
 
 def print_tools_by_location(
-        tools: Dict[str, ToolInfo], location: str, prefix="", filter_by: str = "", show_size=False
+        tools: Dict[str, ToolInfo], location: str, prefix="", filter_by: str = "", show_size=False, show_updated=False,
 ):
     MAX_WV = 41
     if prefix:
@@ -224,11 +224,19 @@ def print_tools_by_location(
         print(f"{' ':<{PRE_SPACE}} Size as compressed in Remote.")
     if location == "local" and show_size:
         print(f"{' ':<{PRE_SPACE}} Size as uncompressed in Local.")
+    if show_updated and location == "remote":
+        print(f"{' ':<{PRE_SPACE}} Updated refers to the last modified date in the remote registry.")
+    elif show_updated and location == "local":
+        print(f"{' ':<{PRE_SPACE}} Last modified date available only for the remote images for now.")
+
     print(f"\n{' ':<{PRE_SPACE}}{ANSIEscape.BOLD}  ", end="")
     print(f"{'Tool name':<{MAX_WN}}  ", end="")
     print(f"{f'{location.capitalize()} Version':{MAX_WV}}  ", end="")
     if show_size:
         print(f"{'Size':<{MAX_WS}}   ", end="")
+    if show_updated and location == "remote":
+        if show_updated and location == "remote":
+            print(f"{'Updated':<{MAX_WS}}   ", end="")
     print(f"{f'{location.capitalize()} Tags':<{MAX_WT}}", end="")
     print(f"{ANSIEscape.END}\n")
     # if not filter_by:
@@ -236,6 +244,7 @@ def print_tools_by_location(
     for tool in sorted(tools):
         lst = tools[tool]
         first_print = True
+        updated = str(lst.updated.date())
         if lst.versions and len(lst.versions) == 1:
             tags = ",".join(next(iter(lst.versions)).tags)
             size = next(iter(lst.versions)).size
@@ -250,6 +259,8 @@ def print_tools_by_location(
             print(f"{version:{MAX_WV}}| ", end="")
             if show_size:
                 print(f"{size:>{MAX_WS}} | ", end="")
+            if show_updated and location == "remote":
+                print(f"{updated:>{MAX_WS}} | ", end="")
             print(f"{tags:<{MAX_WT}}")
         else:
             if not filter_by:
@@ -270,6 +281,8 @@ def print_tools_by_location(
                 print(f"{version:{MAX_WV}}| ", end="")
                 if show_size:
                     print(f"{size:>{MAX_WS}} | ", end="")
+                if show_updated and location == "remote":
+                    print(f"{updated:>{MAX_WS}} | ", end="")
                 print(f"{tags:<{MAX_WT}}")
                 first_print = False
 
@@ -383,6 +396,12 @@ def create_list_argparse(subparsers: argparse._SubParsersAction, ):
         help="Include size in listing. Compressed on remote, uncompressed on local.",
     )
     list_parser.add_argument(
+        "-u",
+        "--updated",
+        action="store_true",
+        help="Include date when last modified.",
+    )
+    list_parser.add_argument(
         "-j", "--json", action="store_true", help="Print output in JSON format."
     )
     list_second_exclusive = list_parser.add_mutually_exclusive_group()
@@ -490,7 +509,7 @@ def list_handler(args):
 
                 print_tools_by_location(
                     tools, location, prefix=reg.remote_registry.full_prefix,
-                    filter_by=(args.tag if not args.all else ""), show_size=args.size
+                    filter_by=(args.tag if not args.all else ""), show_size=args.size, show_updated=args.updated
                 )
             else:
                 print("No single tool available for given arguments.")
