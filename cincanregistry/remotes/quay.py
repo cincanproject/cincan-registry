@@ -2,6 +2,8 @@ import datetime
 import requests
 import json
 from typing import Dict, List
+
+import cincanregistry.models.tool_info
 from cincanregistry.utils import split_tool_tag
 from cincanregistry.remotes._remote_registry import RemoteRegistry
 from cincanregistry import ToolInfo, Remotes
@@ -153,7 +155,6 @@ class QuayRegistry(RemoteRegistry):
                 self.logger.error(f"No tags found for tool {tool_name}.")
                 return
             tool.versions = available_versions
-            tool.updated = datetime.datetime.now()
             if update_cache:
                 self.update_cache_by_tool(tool)
 
