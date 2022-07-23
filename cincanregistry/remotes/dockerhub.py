@@ -118,6 +118,8 @@ class DockerHubRegistry(RemoteRegistry):
         elif fresh_resp:
             # get a images JSON, form new tool list
             fresh_json = fresh_resp.json()
+            from pprint import pprint
+            pprint(fresh_json)
             # print(fresh_json)
             tool_list = {}
             for t in fresh_json["results"]:
@@ -126,7 +128,7 @@ class DockerHubRegistry(RemoteRegistry):
                 #     # name = f"{t['user']}/{t['name']}:{defined_tag}"
                 #     name = f"{t['user']}/{t['name']}"
                 # else:
-                name = f"{t['user']}/{t['name']}"
+                name = f"{t.get('namespace')}/{t.get('name')}"
                 tool_list[name] = ToolInfo(
                     name,
                     parse_file_time(t["last_updated"]),
