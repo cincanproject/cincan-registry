@@ -47,10 +47,10 @@ class GitLabUtils:
 
     def get_tags(self, order_by: str = "updated", sort: str = "desc", search: str = "") -> List[ProjectTag]:
         """Get tags of project"""
-        tags = self.project.tags.list(order_by=order_by, sort=sort, search=search)
+        tags = self.project.tags.list(order_by=order_by, sort=sort, search=search, all=True)
         return tags
 
     def get_releases(self) -> List[ProjectRelease]:
         """Get releases of project"""
-        releases = self.project.releases.list()
+        releases = self.project.releases.list(all=True)
         return releases
