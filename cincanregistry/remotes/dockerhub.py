@@ -118,8 +118,6 @@ class DockerHubRegistry(RemoteRegistry):
         elif fresh_resp:
             # get a images JSON, form new tool list
             fresh_json = fresh_resp.json()
-            from pprint import pprint
-            pprint(fresh_json)
             # print(fresh_json)
             tool_list = {}
             for t in fresh_json["results"]:
